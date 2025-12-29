@@ -1,0 +1,9 @@
+cd ~/ros2_ws
+colcon build
+source install/setup.bash
+
+# Terminal A:
+ros2 run turtlesim turtlesim_node
+
+# Terminal B:
+ros2 run autonomous_turtle avoid_walls
