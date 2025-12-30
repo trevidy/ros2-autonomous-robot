@@ -7,6 +7,8 @@ from enum import Enum
 class State(Enum): # Introduces a state machine for wall avoidance
     FORWARD = 0 
     TURNING = 1
+    BACKWARD = 2
+    SLOW_DOWN = 3
 
 
 class WallAvoider(Node):
@@ -53,16 +55,32 @@ class WallAvoider(Node):
 
         if self.state == State.FORWARD:
             if near_wall: 
-                self.state = State.TURNING # Switch to TURNING state if near a wall
+                self.state = State.SLOW_DOWN # Switch to BACKWARD state if near a wall
                 self.turn_start_time = now # Record the time when turning starts
             msg.linear.x = 2.0 # Move forward
             msg.angular.z = 0.0 # No rotation
-        
-        elif self.state == State.TURNING:
-            msg.linear.x = 1.5 # Slow forward movement while turning
-            msg.angular.z = 2.5 # Turn rate
 
-            if now - self.turn_start_time > 1.2:
+        elif self.state == State.SLOW_DOWN:
+            if msg.linear.x == 0:
+                self.state = State.BACKWARD
+                self.backwards_start_time = now # Record the time when turning starts
+            msg.linear.x -= 0.5 
+            msg.angular.z = 0.0
+        
+        elif self.state == State.BACKWARD:
+            msg.linear.x = -0.5 # Move backward 
+            msg.angular.z = 0.0
+
+            if now - self.backwards_start_time > 2.5:
+                msg.linear.x = 0.0
+                msg.angular.z = 0.0
+                self.state = State.TURNING # Switch back to FORWARD state after turning
+                self.turn_start_time = now
+
+        elif self.state == State.TURNING:
+            msg.linear.x = 3.0 # Slow forward movement while turning
+            msg.angular.z = 2.0 # Turn rate
+            if now - self.turn_start_time > 0.5:
                 self.state = State.FORWARD # Switch back to FORWARD state after turning
 
         self.publisher_.publish(msg)

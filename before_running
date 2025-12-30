@@ -1,4 +1,4 @@
-cd ~/ros2_ws
+cd ~/ros2_autonomous_robot
 colcon build
 source install/setup.bash
 
