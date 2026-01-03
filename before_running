@@ -7,3 +7,37 @@ ros2 run turtlesim turtlesim_node
 
 # Terminal B:
 ros2 run autonomous_turtle avoid_walls
+
+# Opening Gazebo:
+# No GPU:
+LIBGL_ALWAYS_SOFTWARE=1
+ros2 launch autonomous_robot_description sim.launch.py
+
+# Kill all Gazebo
+killall -9 gazebo gzserver gzclient
+
+
+killall -9 gzserver gzclient (Ensure everything is dead)
+
+export LIBGL_ALWAYS_SOFTWARE=1
+
+source /opt/ros/humble/setup.bash
+
+source install/setup.bash
+
+ros2 launch autonomous_robot_description sim.launch.py
+
+# running the code:
+ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "
+linear:
+  x: 0.2
+angular:
+  z: 0.0"
+
+ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "
+angular:
+  z: 0.5"
+
+#TF Tree
+ros2 run tf2_tools view_frames
+xdg-open frames.pdf

@@ -24,8 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'move_turtle = autonomous_turtle.move_turtle:main', # Entry point for the move_turtle node
-            'avoid_walls = autonomous_turtle.avoid_walls:main', # Entry point for the avoid_walls node
+            'obstacle_avoidance = autonomous_turtle.obstacle_avoidance:main',
         ],
     },
 )
