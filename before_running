@@ -8,23 +8,12 @@ ros2 run turtlesim turtlesim_node
 # Terminal B:
 ros2 run autonomous_turtle avoid_walls
 
-# Opening Gazebo:
-# No GPU:
-LIBGL_ALWAYS_SOFTWARE=1
-ros2 launch autonomous_robot_description sim.launch.py
-
 # Kill all Gazebo
-killall -9 gazebo gzserver gzclient
+killall -9 gzserver gzclient 
 
-
-killall -9 gzserver gzclient (Ensure everything is dead)
-
+# Run the simulator
 export LIBGL_ALWAYS_SOFTWARE=1
-
-source /opt/ros/humble/setup.bash
-
 source install/setup.bash
-
 ros2 launch autonomous_robot_description sim.launch.py
 
 # running the code:
@@ -41,3 +30,23 @@ angular:
 #TF Tree
 ros2 run tf2_tools view_frames
 xdg-open frames.pdf
+
+# SLAM
+ros2 launch autonomous_turtle slam.launch.py
+
+# Navigation
+ros2 launch autonomous_turtle nav2.launch.py
+
+# RViz2 
+rviz2
+
+# RViz setup:
+fixed frame: map
+add:
+1. Map
+2. LaserScan
+3. TF
+4. RobotModel
+5. Path - local path
+6. Path - Global path
+6. Pose -> goal pose
