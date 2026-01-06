@@ -1,20 +1,20 @@
-amcl:
+amcl: # Figures out where the robot is on the map.
   ros__parameters:
     use_sim_time: true
 
-bt_navigator:
+bt_navigator: # Uses a behavior tree to decide the logic of navigation
   ros__parameters:
-    use_sim_time: true
+    use_sim_time: true # Use the time provided by the simulator
     default_bt_xml_filename: "navigate_w_replanning_and_recovery.xml"
 
-controller_server:
+controller_server: # Local Planner. Responsible for generating actual velocity commands to move the robot's wheels.
   ros__parameters:
     use_sim_time: true
     controller_frequency: 5.0
     min_x_velocity_threshold: 0.001
-    progress_checker_plugins: ["progress_checker"]
-    goal_checker_plugins: ["goal_checker"]
-    controller_plugins: ["FollowPath"]
+    progress_checker_plugins: ["progress_checker"] # Monitors if the robot is actually moving
+    goal_checker_plugins: ["goal_checker"] # Defines what counts as "arriving" at the destination.
+    controller_plugins: ["FollowPath"] # These are "judges" that score different possible paths.
 
     # Progress checker settings
     progress_checker:
@@ -49,24 +49,24 @@ controller_server:
       PathDist.scale: 32.0
       GoalDist.scale: 24.0
 
-planner_server:
+planner_server: # Global Planner. It calculates the "long-distance" path from the robot's current position to the final destination on the map
   ros__parameters:
     use_sim_time: true
     expected_planner_frequency: 2.0
 
-local_costmap:
+local_costmap: # Small moving square centered on the robot for obstacle avoidance in real-time.
   local_costmap:
     ros__parameters:
       use_sim_time: true
       global_frame: odom
       robot_base_frame: base_footprint
-      rolling_window: true
+      rolling_window: true # The map moves with the robot.
       width: 3
       height: 3
       resolution: 0.05
       
       # ADD THIS: Define the corners of your 0.34m square robot
-      footprint: "[ [0.17, 0.17], [0.17, -0.17], [-0.17, -0.17], [-0.17, 0.17] ]"
+      footprint: "[ [0.17, 0.17], [0.17, -0.17], [-0.17, -0.17], [-0.17, 0.17] ]" # Defines the robot's shape.
 
       plugins: ["obstacle_layer", "inflation_layer"]
       obstacle_layer:
@@ -83,7 +83,7 @@ local_costmap:
         plugin: "nav2_costmap_2d::InflationLayer"
         # The 'buffer' zone around walls. 
         # Set this slightly larger than your robot's diagonal for safety.
-        inflation_radius: 0.30
+        inflation_radius: 0.20
         cost_scaling_factor: 3.0
 
 # global_costmap:
@@ -107,7 +107,7 @@ local_costmap:
 #       inflation_layer:
 #         plugin: "nav2_costmap_2d::InflationLayer"
 
-global_costmap:
+global_costmap: # Used by the planner to find the best route across the whole building or room.
   global_costmap:
     ros__parameters:
       use_sim_time: true
@@ -117,14 +117,15 @@ global_costmap:
       publish_frequency: 1.0
       
       # Added parameters to fix the "Out of Bounds" error
-      rolling_window: false
+      rolling_window: false # Stays fixed to the map origin.
       track_unknown_space: true
       # A square 0.34m wide (0.17m from center to each edge)
       footprint: "[ [0.17, 0.17], [0.17, -0.17], [-0.17, -0.17], [-0.17, 0.17] ]"
 
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      #plugins: ["obstacle_layer", "inflation_layer"]
       
-      static_layer:
+      static_layer: # Uses a pre-made map likely created during a SLAM (mapping) session
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
         
@@ -139,5 +140,5 @@ global_costmap:
           
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        inflation_radius: 0.55
+        inflation_radius: 0.20
         cost_scaling_factor: 3.0

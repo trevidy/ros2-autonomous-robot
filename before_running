@@ -11,36 +11,30 @@ ros2 run autonomous_turtle avoid_walls
 # Kill all Gazebo
 killall -9 gzserver gzclient 
 
-# Run the simulator
-export LIBGL_ALWAYS_SOFTWARE=1
-source install/setup.bash
-ros2 launch autonomous_robot_description sim.launch.py
-
 # running the code:
-ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "
-linear:
-  x: 0.2
-angular:
-  z: 0.0"
-
-ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "
-angular:
-  z: 0.5"
+ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 0.15}, angular: {z: 0.4}}"
 
 #TF Tree
 ros2 run tf2_tools view_frames
 xdg-open frames.pdf
 
-# SLAM
+# 1) Run the simulator
+export LIBGL_ALWAYS_SOFTWARE=1
+source install/setup.bash
+ros2 launch autonomous_robot_description sim.launch.py
+
+# 2) SLAM
 ros2 launch autonomous_turtle slam.launch.py
 
-# Navigation
+# 3) Navigation
 ros2 launch autonomous_turtle nav2.launch.py
+
+ros2 launch autonomous_turtle nav2l.aunch.py use_sim_time:=true
 
 # RViz2 
 rviz2
 
-# RViz setup:
+# 4) Viz setup:
 fixed frame: map
 add:
 1. Map
