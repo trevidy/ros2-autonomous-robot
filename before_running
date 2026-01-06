@@ -19,7 +19,7 @@ ros2 run tf2_tools view_frames
 xdg-open frames.pdf
 
 # 1) Run the simulator
-export LIBGL_ALWAYS_SOFTWARE=1
+ros2 topic hz /scan
 source install/setup.bash
 ros2 launch autonomous_robot_description sim.launch.py
 
@@ -31,10 +31,10 @@ ros2 launch autonomous_turtle nav2.launch.py
 
 ros2 launch autonomous_turtle nav2l.aunch.py use_sim_time:=true
 
-# RViz2 
+# 4) Rviz2 
 rviz2
 
-# 4) Viz setup:
+# 5) Viz setup:
 fixed frame: map
 add:
 1. Map

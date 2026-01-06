@@ -57,6 +57,8 @@ planner_server: # Global Planner. It calculates the "long-distance" path from th
 local_costmap: # Small moving square centered on the robot for obstacle avoidance in real-time.
   local_costmap:
     ros__parameters:
+      update_frequency: 5.0 # How often the robot re-calculates the costmap. It is an internal calculation
+      publish_frequency: 2.0 # How often the robot sends the calculated map to RViz so you can see it on the screen.
       use_sim_time: true
       global_frame: odom
       robot_base_frame: base_footprint
@@ -77,6 +79,8 @@ local_costmap: # Small moving square centered on the robot for obstacle avoidanc
           max_obstacle_height: 2.0
           clearing: true
           marking: true
+          obstacle_max_range: 2.5 # How far the laser can "see" an object
+          raytrace_max_range: 3.0 # How far the laser can "clear" grey space into white space
       
       # ADJUST THIS: 
       inflation_layer:
@@ -86,35 +90,14 @@ local_costmap: # Small moving square centered on the robot for obstacle avoidanc
         inflation_radius: 0.20
         cost_scaling_factor: 3.0
 
-# global_costmap:
-#   global_costmap:
-#     ros__parameters:
-#       use_sim_time: true
-#       global_frame: map
-#       robot_base_frame: base_footprint
-#       resolution: 0.05
-#       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
-#       static_layer:
-#         plugin: "nav2_costmap_2d::StaticLayer"
-#       obstacle_layer:
-#         plugin: "nav2_costmap_2d::ObstacleLayer"
-#         observation_sources: scan
-#         scan:
-#           topic: /scan
-#           max_obstacle_height: 2.0
-#           clearing: true
-#           marking: true
-#       inflation_layer:
-#         plugin: "nav2_costmap_2d::InflationLayer"
-
 global_costmap: # Used by the planner to find the best route across the whole building or room.
   global_costmap:
     ros__parameters:
       use_sim_time: true
       global_frame: map
       robot_base_frame: base_footprint 
-      update_frequency: 1.0
-      publish_frequency: 1.0
+      update_frequency: 5.0
+      publish_frequency: 2.0
       
       # Added parameters to fix the "Out of Bounds" error
       rolling_window: false # Stays fixed to the map origin.
@@ -137,6 +120,10 @@ global_costmap: # Used by the planner to find the best route across the whole bu
           max_obstacle_height: 2.0
           clearing: true
           marking: true
+          # set raytracing_max_range higher than obstacle_max_range to clear "ghost" obstacles.
+          obstacle_max_range: 8.0 # How far the laser can "see" an object
+          raytrace_max_range: 9.0 # How far the laser can "clear" grey space into white space
+          
           
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
