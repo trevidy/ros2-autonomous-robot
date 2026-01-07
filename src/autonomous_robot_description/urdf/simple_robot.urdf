@@ -133,8 +133,8 @@
         </scan>
 
         <range>
-          <min>0.12</min>
-          <max>3.5</max>
+          <min>0.30</min>
+          <max>10.0</max>
           <resolution>0.01</resolution>
         </range>
       </ray>
@@ -153,8 +153,8 @@
     <plugin name="diff_drive_controller" filename="libgazebo_ros_diff_drive.so">
       <ros>
         <remapping>cmd_vel:=cmd_vel</remapping>
+        <parameter name="use_sim_time" value="true"/>
       </ros>
-
       <left_joint>left_wheel_joint</left_joint>
       <right_joint>right_wheel_joint</right_joint>
 

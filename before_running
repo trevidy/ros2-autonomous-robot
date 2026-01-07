@@ -9,7 +9,9 @@ ros2 run turtlesim turtlesim_node
 ros2 run autonomous_turtle avoid_walls
 
 # Kill all Gazebo
-killall -9 gzserver gzclient 
+killall -9 gzserver gzclient robot_state_publisher rviz2
+pkill -f ros
+pkill -f gazebo
 
 # running the code:
 ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 0.15}, angular: {z: 0.4}}"
@@ -19,20 +21,21 @@ ros2 run tf2_tools view_frames
 xdg-open frames.pdf
 
 # 1) Run the simulator
-ros2 topic hz /scan
 source install/setup.bash
-ros2 launch autonomous_robot_description sim.launch.py
+export LIBGL_ALWAYS_SOFTWARE=1
+export ROS_SIM_TIME=true
+ros2 launch autonomous_robot_description sim.launch.py use_sim_time:=True
 
 # 2) SLAM
-ros2 launch autonomous_turtle slam.launch.py
+export ROS_SIM_TIME=true
+ros2 launch autonomous_turtle slam.launch.py use_sim_time:=True
 
 # 3) Navigation
-ros2 launch autonomous_turtle nav2.launch.py
-
-ros2 launch autonomous_turtle nav2l.aunch.py use_sim_time:=true
+export ROS_SIM_TIME=true
+ros2 launch autonomous_turtle nav2.launch.py use_sim_time:=True
 
 # 4) Rviz2 
-rviz2
+rviz2 use_sim_time:=True
 
 # 5) Viz setup:
 fixed frame: map
@@ -44,3 +47,11 @@ add:
 5. Path - local path
 6. Path - Global path
 6. Pose -> goal pose
+
+# Use the keyboard to control:
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+
+
+# kill hidden processes
+pkill -f ros
+pkill -f gazebo

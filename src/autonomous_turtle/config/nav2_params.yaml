@@ -11,6 +11,7 @@ controller_server: # Local Planner. Responsible for generating actual velocity c
   ros__parameters:
     use_sim_time: true
     controller_frequency: 5.0
+    transform_tolerance: 1.0
     min_x_velocity_threshold: 0.001
     progress_checker_plugins: ["progress_checker"] # Monitors if the robot is actually moving
     goal_checker_plugins: ["goal_checker"] # Defines what counts as "arriving" at the destination.
@@ -67,7 +68,8 @@ local_costmap: # Small moving square centered on the robot for obstacle avoidanc
       height: 3
       resolution: 0.05
       
-      # ADD THIS: Define the corners of your 0.34m square robot
+      transform_tolerance: 1.0
+      #Define the corners of your 0.34m square robot
       footprint: "[ [0.17, 0.17], [0.17, -0.17], [-0.17, -0.17], [-0.17, 0.17] ]" # Defines the robot's shape.
 
       plugins: ["obstacle_layer", "inflation_layer"]
@@ -103,6 +105,7 @@ global_costmap: # Used by the planner to find the best route across the whole bu
       rolling_window: false # Stays fixed to the map origin.
       track_unknown_space: true
       # A square 0.34m wide (0.17m from center to each edge)
+      transform_tolerance: 1.0
       footprint: "[ [0.17, 0.17], [0.17, -0.17], [-0.17, -0.17], [-0.17, 0.17] ]"
 
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
