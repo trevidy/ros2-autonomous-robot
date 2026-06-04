@@ -27,14 +27,24 @@ ros2 launch slam_toolbox online_async_launch.py slam_params_file:=./src/my_bot/c
 # runs the rosbridge server
 ros2 run rosbridge_server rosbridge_websocket # if error, try to run rosbridge from source
 
+#0)colcon build --symlink-install
+#0) source install/setup.bash
+
 # 1) launch gazebo (Gazebo boots up controller manager and checks description->ros2_control->gazebo tag)
 ros2 launch my_bot launch_sim.launch.py world:=./src/my_bot/worlds/obstacles.world
 
 # 2) launch joystick (teleop_twist_joy)
 ros2 launch my_bot joystick.launch.py
 
+# 2.5) launch the video server
+ros2 run web_video_server web_video_server
+
 # 3) launch rosbridge server
 ros2 run rosbridge_server rosbridge_websocket --ros-args -p address:=0.0.0.0
+
+# 3.5) rosapi node
+cd ./ros-ui-react/example
+npm start
 
 # 4) launch the web page
 npm start
@@ -50,3 +60,9 @@ ros2 topic pub /joy sensor_msgs/msg/Joy "{
 # resetting daemon
 ros2 daemon stop
 ros2 daemon start
+
+# ip config
+export ROS_IP=10.0.0.206; export ROS_HOSTNAME=10.0.0.206; export ROS_LOCALHOST_ONLY=0
+
+# powershell config test:
+powershell Test-NetConnection -ComputerName 10.0.0.206 -Port 9090
