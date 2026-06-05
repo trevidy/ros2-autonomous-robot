@@ -10,7 +10,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
 
-    joy_params = os.path.join(get_package_share_directory('my_bot'), 'config', 'joystick.yaml')
+    joy_params = os.path.join(get_package_share_directory('ros2-autonomous-robot'), 'config', 'joystick.yaml')
 
     # joy_node = Node(
     #     package = 'joy',

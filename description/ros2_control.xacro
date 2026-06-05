@@ -25,7 +25,7 @@
 
     <gazebo> <!-- Tels Gazebo to use ros2 control-->
         <plugin name = "gazebo_ros2_control" filename = "libgazebo_ros2_control.so">
-            <parameters>$(find my_bot)/config/my_controllers.yaml</parameters>
+            <parameters>$(find ros2-autonomous-robot)/config/my_controllers.yaml</parameters>
         </plugin>
     </gazebo>
 
