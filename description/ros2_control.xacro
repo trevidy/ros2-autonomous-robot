@@ -2,8 +2,8 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <ros2_control name = "GazeboSystem" type = "system">
-        <hardware>
-            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        <hardware> <!-- this tells ROS2: our phyiscal hardware wrapper for this robot is Gazebo-->
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin> <!-- for a real robot, change this to the robot's driver-->
         </hardware>
         <joint name = "left_wheel_joint">
             <command_interface name = "velocity">
@@ -23,10 +23,10 @@
         </joint>
     </ros2_control>
 
-    <gazebo> <!-- Tels Gazebo to use ros2 control-->
+    <gazebo> <!-- This tells gazebo: do not try to control the wheels yourself. open a communication pipe and let the external ROS2 controller manager drive them-->
         <plugin name = "gazebo_ros2_control" filename = "libgazebo_ros2_control.so">
             <parameters>$(find ros2-autonomous-robot)/config/my_controllers.yaml</parameters>
         </plugin>
     </gazebo>
 
-</robot>
+</robot> 
