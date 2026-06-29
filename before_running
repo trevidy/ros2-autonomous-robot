@@ -36,6 +36,7 @@ Do this only once after file changes
 #0) colcon build --symlink-install
 
 Do this every terminal
+#0) /dev_ws
 #0) source install/setup.bash
 
 # 1) launch gazebo (Gazebo boots up controller manager and checks description->ros2_control->gazebo tag)
